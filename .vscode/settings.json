@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "cstddef": "c",
+        "string": "c",
+        "optional": "c",
+        "limits": "c",
+        "memory": "c",
+        "functional": "c",
+        "type_traits": "c",
+        "istream": "c",
+        "streambuf": "c"
+    }
+}
