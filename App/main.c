@@ -29,10 +29,10 @@ int main(void)
             proc_PCMsg();
         }
 
-        if (g_Uart4RxBuf.bFinish == 1)
-        {
-            proc_IMU();
-        }
+        // if (g_Uart4RxBuf.bFinish == 1)
+        // {
+        //     proc_IMU();
+        // }
 
         if (g_Uart2RxBuf.bFinish == 1)
         {

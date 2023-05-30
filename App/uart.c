@@ -158,7 +158,9 @@ u16 DMAUart_Read(UART_BUF *pUartBuf, u8 *pData, u16 nSize)
         if (pUartBuf->nRdInde >= pUartBuf->nSize)
             pUartBuf->nRdInde = 0;
     }
-
+    // Q&A
+    // Q:为什么先禁用总线空闲中断
+    // A：
     USART_ITConfig(pUartBuf->pUSARTx, USART_IT_IDLE, DISABLE);
     pUartBuf->nCount -= nLen;
     if (pUartBuf->nCount <= 0)
@@ -174,17 +176,6 @@ u16 DMAUart_Read(UART_BUF *pUartBuf, u8 *pData, u16 nSize)
 // ***********************************************************
 // ***********************************************************
 // ***********************************************************
-// 设置485设置
-static void RS485_SetBit(USART_TypeDef *pUSARTx, u8 nSet)
-{
-    if (pUSARTx == USART3)
-    {
-        if (nSet != 0)
-            GPIO_SetBits(GPIOE, GPIO_Pin_9); // 发送
-        else
-            GPIO_ResetBits(GPIOE, GPIO_Pin_9); // 接收
-    }
-}
 // ***********************************************************
 // 串口中断
 void Uartx_TC_ISR(UART_BUF *pUartBuf)
@@ -204,7 +195,6 @@ void Uartx_TC_ISR(UART_BUF *pUartBuf)
     {
         USART_ITConfig(pUartBuf->pUSARTx, USART_IT_TC, DISABLE);
         USART_ClearFlag(pUartBuf->pUSARTx, USART_FLAG_TC);
-        RS485_SetBit(pUartBuf->pUSARTx, 0); // 485设置
         pUartBuf->bFinish = 0;
     }
 }
@@ -227,7 +217,6 @@ void Uartx_Send(UART_BUF *pUartBuf, u8 *pData, u16 nSize)
             pUartBuf->nWrInde = 0;
     }
 
-    RS485_SetBit(pUartBuf->pUSARTx, 1); // 485设置,232不需要
     USART_ITConfig(pUartBuf->pUSARTx, USART_IT_TC, DISABLE);
     nCount = pUartBuf->nCount;
     if ((pUartBuf->nCount + nSize) > pUartBuf->nSize)

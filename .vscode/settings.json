@@ -8,6 +8,8 @@
         "functional": "c",
         "type_traits": "c",
         "istream": "c",
-        "streambuf": "c"
-    }
+        "streambuf": "c",
+        "stm32f10x_tim.h": "c"
+    },
+    "files.encoding": "gb2312"
 }
