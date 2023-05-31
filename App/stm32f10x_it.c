@@ -276,7 +276,7 @@ void DMA1_Channel2_IRQHandler(void)
 }
 // ***********************************************************
 // ***********************************************************
-// 外部中断1服务程序  pps interrupt PE1	EXTI1_IRQHandler
+// 外部中断1服务程序  pps interrupt PB1	EXTI1_IRQHandler
 void EXTI1_IRQHandler(void)
 {
   if (EXTI_GetITStatus(EXTI_Line1) != RESET)

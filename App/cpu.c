@@ -417,6 +417,7 @@ void USART3_Config(void)
 
 // ***********************************************************
 // 1ms¶¨Ê±Æ÷
+// #TODO: TIM2CLK = ?
 void TIM2_Config()
 {
 	NVIC_InitTypeDef NVIC_InitStructure;
