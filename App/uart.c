@@ -13,36 +13,37 @@
 static u8 DMATxBuf1[UART1_DMA_TX_SIZE];
 static u8 DMATxBuf2[UART2_DMA_TX_SIZE];
 static u8 DMATxBuf3[UART3_DMA_TX_SIZE];
-static u8 DMATxBuf4[UART4_DMA_TX_SIZE];
+// static u8 DMATxBuf4[UART4_DMA_TX_SIZE];
 // ***********************************************************
 static u8 DMARxBuf1[UART1_DMA_RX_SIZE];
 static u8 DMARxBuf2[UART2_DMA_RX_SIZE];
 static u8 DMARxBuf3[UART3_DMA_RX_SIZE];
-static u8 DMARxBuf4[UART4_DMA_RX_SIZE];
+// static u8 DMARxBuf4[UART4_DMA_RX_SIZE];
 // ***********************************************************
 static u8 TxBuf1[UART1_TXBUF_SIZE];
 static u8 TxBuf2[UART2_TXBUF_SIZE];
 static u8 TxBuf3[UART3_TXBUF_SIZE];
-static u8 TxBuf4[UART4_TXBUF_SIZE];
-static u8 TxBuf5[UART5_TXBUF_SIZE];
+// static u8 TxBuf4[UART4_TXBUF_SIZE];
+// static u8 TxBuf5[UART5_TXBUF_SIZE];
 // ***********************************************************
 static u8 RxBuf1[UART1_RXBUF_SIZE];
 static u8 RxBuf2[UART2_RXBUF_SIZE];
 static u8 RxBuf3[UART3_RXBUF_SIZE];
-static u8 RxBuf4[UART4_RXBUF_SIZE];
+// static u8 RxBuf4[UART4_RXBUF_SIZE];
 // static u8   RxBuf5[UART5_RXBUF_SIZE];
 //  ***********************************************************
 UART_BUF g_Uart1TxBuf = {UART1_TXBUF_SIZE, UART1_DMA_TX_SIZE, 0, 0, 0, 0, TxBuf1, DMATxBuf1, USART1, DMA1_Channel4, DMA1_IT_TC4};
 UART_BUF g_Uart2TxBuf = {UART2_TXBUF_SIZE, UART2_DMA_TX_SIZE, 0, 0, 0, 0, TxBuf2, DMATxBuf2, USART2, DMA1_Channel6, DMA1_IT_TC6};
 UART_BUF g_Uart3TxBuf = {UART3_TXBUF_SIZE, UART3_DMA_TX_SIZE, 0, 0, 0, 0, TxBuf3, DMATxBuf3, USART3, DMA1_Channel2, DMA1_IT_TC2};
-UART_BUF g_Uart4TxBuf = {UART4_TXBUF_SIZE, UART4_DMA_TX_SIZE, 0, 0, 0, 0, TxBuf4, DMATxBuf4, UART4, DMA2_Channel3, DMA2_IT_TC3};
-UART_BUF g_Uart5TxBuf = {UART5_TXBUF_SIZE, 0, 0, 0, 0, 0, TxBuf5, NULL, UART5, NULL, DMA1_FLAG_TC5};
+// UART_BUF g_Uart4TxBuf = {UART4_TXBUF_SIZE, UART4_DMA_TX_SIZE, 0, 0, 0, 0, TxBuf4, DMATxBuf4, UART4, DMA2_Channel3, DMA2_IT_TC3};
+// UART_BUF g_Uart5TxBuf = {UART5_TXBUF_SIZE, 0, 0, 0, 0, 0, TxBuf5, NULL, UART5, NULL, DMA1_FLAG_TC5};
+// UART_BUF g_Uart5TxBuf = {UART5_TXBUF_SIZE, 0, 0, 0, 0, 0, TxBuf5, NULL, UART5, NULL, DMA1_FLAG_TC5};
 // ***********************************************************
 // ***********************************************************
 UART_BUF g_Uart1RxBuf = {UART1_RXBUF_SIZE, UART1_DMA_RX_SIZE, 0, 0, 0, 0, RxBuf1, DMARxBuf1, USART1, DMA1_Channel5, DMA1_FLAG_GL5};
 UART_BUF g_Uart2RxBuf = {UART2_RXBUF_SIZE, UART2_DMA_RX_SIZE, 0, 0, 0, 0, RxBuf2, DMARxBuf2, USART2, DMA1_Channel7, DMA1_FLAG_GL7};
 UART_BUF g_Uart3RxBuf = {UART3_RXBUF_SIZE, UART3_DMA_RX_SIZE, 0, 0, 0, 0, RxBuf3, DMARxBuf3, USART3, DMA1_Channel3, DMA1_FLAG_GL3};
-UART_BUF g_Uart4RxBuf = {UART4_RXBUF_SIZE, UART4_DMA_RX_SIZE, 0, 0, 0, 0, RxBuf4, DMARxBuf4, UART4, DMA2_Channel5, DMA2_FLAG_GL5};
+// UART_BUF g_Uart4RxBuf = {UART4_RXBUF_SIZE, UART4_DMA_RX_SIZE, 0, 0, 0, 0, RxBuf4, DMARxBuf4, UART4, DMA2_Channel5, DMA2_FLAG_GL5};
 // UART_BUF    g_Uart5RxBuf = {UART5_RXBUF_SIZE, 0,                 0, 0, 0, 0, RxBuf5, MILL,      UART5,  NULL,         NULL};
 //  ***********************************************************
 //  ***********************************************************

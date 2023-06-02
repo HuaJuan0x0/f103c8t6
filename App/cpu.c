@@ -6,7 +6,7 @@
 // ***********************************************************
 // ***********************************************************
 // ***********************************************************
-// 70MHz
+// 72MHz
 void RCC_ClockConfig(void)
 {
 	u16 i = 0;
@@ -37,8 +37,8 @@ void RCC_ClockConfig(void)
 		RCC_ADCCLKConfig(RCC_PCLK2_Div6); // ADCCLK = PCLK2/6 设置ADC外设时钟=低速总线2时钟的六分频
 		// Set PLL clock output to 72MHz using HSE (8MHz) as entry clock
 		// 上面这句例程中缺失了，但却很关键
-		// 利用锁相环将外部10Mhz晶振7倍频到70Mhz
-		RCC_PLLConfig(RCC_PLLSource_HSE_Div1, RCC_PLLMul_7);
+		// 利用锁相环将外部8Mhz晶振9倍频到72Mhz
+		RCC_PLLConfig(RCC_PLLSource_HSE_Div1, RCC_PLLMul_9);
 		RCC_PLLCmd(ENABLE); // Enable PLL 使能锁相环
 
 		// Wait till PLL is ready 等待锁相环输出稳定
@@ -95,6 +95,7 @@ static void GPIO_Config(void)
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
+
 	// PPS PB1
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
 	// TODO: gpio_mode 不清楚
@@ -417,7 +418,7 @@ void USART3_Config(void)
 
 // ***********************************************************
 // 1ms定时器
-// #TODO: TIM2CLK = ?
+// #TODO:
 void TIM2_Config()
 {
 	NVIC_InitTypeDef NVIC_InitStructure;
@@ -426,10 +427,10 @@ void TIM2_Config()
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
 
-	// TIM2CLK 即PCLK1=35MHz
-	// TIM2CLK = 35 MHz, Prescaler = 70
+	// TIM2CLK 即PCLK1=72MHz
+	// TIM2CLK = 72 MHz, Prescaler = 72
 	TIM_TimeBaseStructure.TIM_Period = 1000 - 1;
-	TIM_TimeBaseStructure.TIM_Prescaler = (70 - 1);
+	TIM_TimeBaseStructure.TIM_Prescaler = (72 - 1);
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up; // TIM向上计数模式
 	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
@@ -438,7 +439,7 @@ void TIM2_Config()
 
 	TIM_Cmd(TIM2, ENABLE); // 使能TIMx外设
 
-	NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;			  // TIM3中断
+	NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;			  // TIM2中断
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; // 先占优先级0级
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 4;		  // 从优先级3级
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			  // IRQ通道被使能

@@ -13,7 +13,7 @@
 static stRTC_Time s_tCameraTime = {0};
 static uint16_t s_Frame_count = 0;
 static uint16_t s_Synic_frame_counter = 100;
-static uint16_t s_Pusle_time_counter = 0;
+static uint16_t s_Pusle_time_counter = 0; // camera 触发0-1
 // ***********************************************************
 // ***********************************************************
 // ***********************************************************
@@ -81,7 +81,7 @@ int CameraManuMode(stRTC_Time *ptSysTime)
     return 0;
 }
 //*****************************************************
-void CameraAtuoMode(stRTC_Time *ptSysTime)
+void CameraAutoMode(stRTC_Time *ptSysTime)
 {
     if (g_CameraPulse == 1)
     {
@@ -196,7 +196,7 @@ void CameraSynic(stRTC_Time *ptSysTime)
     switch (g_nCameraMode) // 0x01自动模式;0x02手动模式
     {
     case 0x01: // 自动
-        CameraAtuoMode(ptSysTime);
+        CameraAutoMode(ptSysTime);
         break;
     case 0x02:                 // 手动
         if (g_nCameraTri == 1) // 相机手动触发指令: 0无；1触发

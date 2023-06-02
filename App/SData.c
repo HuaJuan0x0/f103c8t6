@@ -75,13 +75,9 @@ void Timer3_IRQ(void)
         usrGetTime(&stSysTime);
         if (stSysTime.mseconds == 0)
         {
-            GPIO_SetBits(GPIOC, GPIO_Pin_6);
-            GPIO_SetBits(GPIOC, GPIO_Pin_7);
         }
         else if (stSysTime.mseconds == 1)
         {
-            GPIO_ResetBits(GPIOC, GPIO_Pin_6);
-            GPIO_ResetBits(GPIOC, GPIO_Pin_7);
         }
         else if (stSysTime.mseconds == 5) // 开启输出模拟GPS数据
         {
