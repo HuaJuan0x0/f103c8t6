@@ -35,5 +35,4 @@
 .\objects\gnss.o: App\uart.h
 .\objects\gnss.o: App\time.h
 .\objects\gnss.o: App\gnss.h
-.\objects\gnss.o: App\imu.h
 .\objects\gnss.o: App\pc_mcu.h

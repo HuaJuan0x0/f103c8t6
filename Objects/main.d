@@ -32,7 +32,6 @@
 .\objects\main.o: App\SData.h
 .\objects\main.o: App\uart.h
 .\objects\main.o: App\pc_mcu.h
-.\objects\main.o: App\imu.h
 .\objects\main.o: App\gnss.h
 .\objects\main.o: App\camera.h
 .\objects\main.o: App\time.h

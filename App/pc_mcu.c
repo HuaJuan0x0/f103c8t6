@@ -10,7 +10,6 @@
 // *****************************************************************
 __IO u8 g_nSysWork = 0;       // 0：停止工作；1:校时成功，开始工作
 __IO u8 g_nGPSOK = 0;         // GPS校时
-__IO u8 g_nIMUState = 0;      // IMU标志
 __IO u8 g_nGNSSState = 0;     // GNSS标志
 __IO u8 g_nCameraMode = 0x01; // 0x01自动模式;0x02手动模式
 __IO u8 g_nCameraTri = 0x00;  // 相机手动触发指令: 0无；1触发

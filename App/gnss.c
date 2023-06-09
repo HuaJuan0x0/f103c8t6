@@ -7,7 +7,6 @@
 #include "uart.h"
 #include "time.h"
 #include "gnss.h"
-#include "imu.h"
 #include "pc_mcu.h"
 
 // ***********************************************************
@@ -50,9 +49,11 @@ static GGA gga_data_parse(char *gga_data)
     unsigned char times = 0;
     char *p;
     char *end;
-    char *s = strdup(gga_data);
+    char s[100] = {'\0'};
+    char *a = s;
+    strcpy(s, gga_data);
 
-    p = strsplit(&s, ",");
+    p = strsplit(&a, ",");
     while (p)
     {
         switch (times)
@@ -100,7 +101,7 @@ static GGA gga_data_parse(char *gga_data)
         default:
             break;
         }
-        p = strsplit(&s, ",");
+        p = strsplit(&a, ",");
         times++;
     }
     free(s);
@@ -109,8 +110,8 @@ static GGA gga_data_parse(char *gga_data)
 
 static stRTC_Time rtc_parse(char *time)
 {
-    usrGetTime(&s_stGNSSTime);
     double time_float;
+    usrGetTime(&s_stGNSSTime);
     time_float = strtod(time, NULL);
     s_stGNSSTime.hours = (unsigned int)time_float / 10000;
     s_stGNSSTime.minutes = (unsigned int)time_float % 10000 / 100;
@@ -279,7 +280,7 @@ void proc_gnssdata(char ch)
     // 将串口拿到的gga数据解析
     if ((nGGAOK == 1) && (nGGAOK_Parse == 1))
     {
-        char *gga_data = pGGABuf;
+        char *gga_data = (char *)pGGABuf;
         GGA gga_stData = gga_data_parse(gga_data);
         s_stGNSSTime = rtc_parse(gga_stData.utc);
 

@@ -13,7 +13,8 @@
                 "c:\\Users\\ON_ICE\\Desktop\\LD\\103\\f103c8t6\\Libraries\\STM32F10x_StdPeriph_Driver\\src"
             ],
             "defines": [
-                "STM32F10X_HD",
+                "STM32F10X_MD",
+                "USE_STDPERIPH_DRIVER",
                 "__CC_ARM",
                 "__arm__",
                 "__align(x)=",
