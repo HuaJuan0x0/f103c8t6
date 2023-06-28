@@ -158,7 +158,7 @@ void SysTick_Handler(void)
  * @}
  */
 // ***********************************************************
-// TIM3ÖÐ¶Ï
+// TIM2ÖÐ¶Ï
 void TIM2_IRQHandler(void)
 {
   if (TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET)
@@ -252,13 +252,13 @@ void DMA1_Channel4_IRQHandler(void)
 }
 // ***********************************************************
 // ´®¿Ú2 TX
-void DMA1_Channel6_IRQHandler(void)
+void DMA1_Channel7_IRQHandler(void)
 {
   UART_BUF *pUartBuf = &g_Uart2TxBuf;
 
   DMA_Cmd(pUartBuf->pDMA_Streamx, DISABLE); // DMA1_IT_TC4
   DMA_ClearITPendingBit(pUartBuf->DMA_IT);
-  DMA_ClearFlag(DMA1_FLAG_TC6);
+  DMA_ClearFlag(DMA1_FLAG_TC7);
 
   DMAUart_TC_ISR(pUartBuf);
 }

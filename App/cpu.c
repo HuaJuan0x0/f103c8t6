@@ -68,9 +68,11 @@ void RCC_ClockConfig(void)
 static void GPIO_Config(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
+	EXTI_InitTypeDef EXTI_InitStructure;
 	// USART_InitTypeDef USART_InitStruct;
+	NVIC_InitTypeDef NVIC_InitStructure;
 
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
 
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
@@ -98,19 +100,32 @@ static void GPIO_Config(void)
 
 	// PPS PB1
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
-	// TODO: gpio_mode 不清楚
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
+	// pb1 外部中断
+	GPIO_EXTILineConfig(GPIO_PortSourceGPIOB, GPIO_PinSource5);
+	EXTI_InitStructure.EXTI_Line = EXTI_Line5;
+	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
+	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+	EXTI_Init(&EXTI_InitStructure);
+
+	NVIC_InitStructure.NVIC_IRQChannel = EXTI1_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
 
 	//		 14		PA4			触发IO	与相机设置配合
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
 	//		 15		PA5			LED	IO低-亮，高-灭
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 }
@@ -119,6 +134,7 @@ static void GPIO_Config(void)
 void DMA_USART1_RX_Config()
 {
 	DMA_InitTypeDef DMA_InitStructure;
+	NVIC_InitTypeDef NVIC_InitStructure;
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE); // DMA配置
 
 	DMA_DeInit(DMA1_Channel5);
@@ -135,6 +151,13 @@ void DMA_USART1_RX_Config()
 	DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;							// 禁止内存到内存的传输
 	DMA_Init(DMA1_Channel5, &DMA_InitStructure);							// 配置DMA1的5通道
 
+	NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel5_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; // 抢占优先级3
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;		  // 子优先级3
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			  // IRQ通道使能
+	NVIC_Init(&NVIC_InitStructure);							  // 根据指定的参数初始化VIC寄存器
+
+	DMA_ITConfig(DMA1_Channel5, DMA_IT_TC, ENABLE);
 	DMA_Cmd(DMA1_Channel5, ENABLE);
 }
 
@@ -216,13 +239,14 @@ void USART1_Config(void)
 	DMA_USART1_TX_Config();
 }
 // ***********************************************************
-// 串口2接收的DMA设置，DMA1，通道7
+// 串口2接收的DMA设置，DMA1，通道6
 void DMA_USART2_RX_Config()
 {
 	DMA_InitTypeDef DMA_InitStructure;
+	NVIC_InitTypeDef NVIC_InitStructure;
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE); // DMA配置
 
-	DMA_DeInit(DMA1_Channel7);
+	DMA_DeInit(DMA1_Channel6);
 	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)(&USART2->DR);		// 串口数据寄存器地址
 	DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)g_Uart2RxBuf.pDMABuf;	// 内存地址(要传输的变量的指针)
 	DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;						// 方向(从外设到内存)
@@ -234,20 +258,27 @@ void DMA_USART2_RX_Config()
 	DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;							// DMA模式：一次传输，循环
 	DMA_InitStructure.DMA_Priority = DMA_Priority_Medium;					// 优先级：高
 	DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;							// 禁止内存到内存的传输
-	DMA_Init(DMA1_Channel7, &DMA_InitStructure);							// 配置DMA1的4通道
+	DMA_Init(DMA1_Channel6, &DMA_InitStructure);							// 配置DMA1的7通道
 
-	DMA_Cmd(DMA1_Channel7, ENABLE);
+	NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel6_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; // 抢占优先级3
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;		  // 子优先级3
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			  // IRQ通道使能
+	NVIC_Init(&NVIC_InitStructure);							  // 根据指定的参数初始化VIC寄存器
+
+	DMA_ITConfig(DMA1_Channel6, DMA_IT_TC, ENABLE);
+	DMA_Cmd(DMA1_Channel6, ENABLE);
 }
 
 // ***********************************************************
-// 串口2接收的DMA设置，DMA1，通道6
+// 串口2接收的DMA设置，DMA1，通道7
 void DMA_USART2_TX_Config()
 {
 	DMA_InitTypeDef DMA_InitStructure;
 	NVIC_InitTypeDef NVIC_InitStructure;
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE); // DMA配置
 
-	DMA_DeInit(DMA1_Channel6);
+	DMA_DeInit(DMA1_Channel7);
 	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)(&USART2->DR);		// 串口数据寄存器地址
 	DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)g_Uart2TxBuf.pDMABuf;	// 内存地址(要传输的变量的指针)
 	DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralDST;						// 方向(从内存到外设)
@@ -259,16 +290,16 @@ void DMA_USART2_TX_Config()
 	DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;							// DMA模式：一次传输，循环
 	DMA_InitStructure.DMA_Priority = DMA_Priority_Medium;					// 优先级：高
 	DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;							// 禁止内存到内存的传输
-	DMA_Init(DMA1_Channel6, &DMA_InitStructure);							// 配置DMA1的4通道
+	DMA_Init(DMA1_Channel7, &DMA_InitStructure);							// 配置DMA1的6通道
 
-	NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel6_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel7_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; // 抢占优先级3
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;		  // 子优先级3
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			  // IRQ通道使能
 	NVIC_Init(&NVIC_InitStructure);							  // 根据指定的参数初始化VIC寄存器
 
-	DMA_ITConfig(DMA1_Channel6, DMA_IT_TC, ENABLE);
-	DMA_Cmd(DMA1_Channel6, DISABLE);
+	DMA_ITConfig(DMA1_Channel7, DMA_IT_TC, ENABLE);
+	DMA_Cmd(DMA1_Channel7, DISABLE);
 }
 // ***********************************************************
 // 串口2配置 PA2:TX; PA3:RX
@@ -320,6 +351,7 @@ void USART2_Config(void)
 void DMA_USART3_RX_Config()
 {
 	DMA_InitTypeDef DMA_InitStructure;
+	NVIC_InitTypeDef NVIC_InitStructure;
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE); // DMA配置
 
 	DMA_DeInit(DMA1_Channel3);
@@ -335,6 +367,14 @@ void DMA_USART3_RX_Config()
 	DMA_InitStructure.DMA_Priority = DMA_Priority_Medium;					// 优先级：高
 	DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;							// 禁止内存到内存的传输
 	DMA_Init(DMA1_Channel3, &DMA_InitStructure);							// 配置DMA1的4通道
+
+	NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel3_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; // 抢占优先级3
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;		  // 子优先级3
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			  // IRQ通道使能
+	NVIC_Init(&NVIC_InitStructure);							  // 根据指定的参数初始化VIC寄存器
+
+	DMA_ITConfig(DMA1_Channel3, DMA_IT_TC, ENABLE);
 
 	DMA_Cmd(DMA1_Channel3, ENABLE);
 }

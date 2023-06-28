@@ -81,7 +81,7 @@ void Timer3_IRQ(void)
         }
         else if (stSysTime.mseconds == 5) // 开启输出模拟GPS数据
         {
-            g_nGPSTxEnable = ENABLE;
+            // g_nGPSTxEnable = ENABLE;
         }
         else if (stSysTime.mseconds == 10)
         {

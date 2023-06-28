@@ -19,7 +19,7 @@ int main(void)
 
     Sys_Config();
 
-    IWDG_Config(); // 开启看门狗
+    // IWDG_Config(); // 开启看门狗
 
     while (1)
     {

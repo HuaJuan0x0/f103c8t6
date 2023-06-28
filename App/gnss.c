@@ -121,6 +121,7 @@ static stRTC_Time rtc_parse(char *time)
     return s_stGNSSTime;
 }
 // GGA和ZDA数据提取出来
+// $GPGGA,050901,3931.4449,N,11643.5123,E,1,07,1.4,76.2,M,-7.0,M,,*65
 // $GPGGA,HHMMSS.SS,DDMM.MMMM,S,DDDMM.MMMM,S,N,QQ,PP.P,SAAAAA.AA,M,±XXXX.XX,M,SSS,AAAA*CC<CR><LF>
 // $GPZDA,HHMMSS.SS,DD,MM,YYYY,XX,YY*CC<CR><LF>
 // 字符处理
@@ -340,7 +341,7 @@ void GNSS_PPS_Callback(void)
 {
     if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_1) == RESET) // 低电平
         return;
-    usrGetTime(&s_stGNSSTime);
+    // usrGetTime(&s_stGNSSTime);
 
     __disable_irq();
     usrTimeSetMSZero();
@@ -351,7 +352,7 @@ void GNSS_PPS_Callback(void)
     if (s_nTime_GNSS_Num <= 550)
         return;
 
-    // usrGetTime(&s_stGNSSTime);
+    usrGetTime(&s_stGNSSTime);
     s_nTime_GNSS_Num = 0;
     s_nGNSS_Tick_second = 1;
     s_nGNSSTick = s_nGNSSSysTick;
